@@ -1,3 +1,4 @@
+import subprocess
 import git
 import os
 import sys
@@ -30,9 +31,11 @@ def check_for_update_and_restart():
 
         # Restart the script
         print("Restarting script...")
-        os.execl(sys.executable, sys.executable, "main.py")
+        subprocess.call([sys.executable, "main.py"])
+        sys.exit(0)
     else:
         print('No new commits.')
+
 
 if __name__ == "__main__":
     print("He non tu t'es trompé tu as relancé update_project.py au lieu de main.py")
