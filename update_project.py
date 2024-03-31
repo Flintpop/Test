@@ -112,8 +112,7 @@ class AutoUpdateProgram:
 
 
 if __name__ == '__main__':
-    project_root_path = os.path.join(os.path.dirname(__file__), '..', '..')
+    project_root_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
     main_file = os.path.join(project_root_path, 'src', 'server', 'application', 'program.py')
-    repo_path = "https://github.com/Flintpop/test"
-    AutoUpdateProgram(main_file, repo_path, log=print, log_error=print, ps1_file_path="update.ps1").update()
+    AutoUpdateProgram(main_file, project_root_path, log=print, log_error=print, ps1_file_path="update.ps1").update()
     
