@@ -15,6 +15,7 @@ class AutoUpdateProgram:
     Before updating, the server_ip variable in the .ps1 file is preserved,
     and files that are ignored or not tracked by Git are also preserved.
     """
+
     def __init__(self, main_file: str, repo_path: str, log, log_error, ps1_file_path: str, force_update=False):
         self.main_file = main_file
         self.repo_path = repo_path
@@ -75,6 +76,13 @@ class AutoUpdateProgram:
         """
         try:
             repo = git.Repo(self.repo_path)
+
+            if repo.active_branch.name != 'main':
+                self.log_error("The active branch is not 'main'. Cancelling update..."
+                               "Please switch to the 'main' (stable) branch of the software before updating "
+                               "and running the app. \nRun the command : 'git checkout main'. \nExiting...")
+                sys.exit(1)
+
             repo.remotes.origin.fetch()
 
             local_commit = repo.head.commit
@@ -111,8 +119,12 @@ class AutoUpdateProgram:
         sys.exit(0)
 
 
+def print_wrapper(message, print_formatted=True):
+    print(message)
+
+
 if __name__ == '__main__':
     project_root_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-    main_file = os.path.join(project_root_path, 'src', 'server', 'application', 'program.py')
-    AutoUpdateProgram(main_file, project_root_path, log=print, log_error=print, ps1_file_path="update.ps1").update()
-    
+    main_file = os.path.join(project_root_path, 'main.py')
+    AutoUpdateProgram(main_file, project_root_path, log=print_wrapper, log_error=print_wrapper,
+                      ps1_file_path="update.ps1").update()
